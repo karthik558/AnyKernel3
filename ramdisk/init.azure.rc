@@ -1,0 +1,81 @@
+# Ramdisk file for profile based kernel management
+# Implimentation inspired by Franco's fku profiles
+
+on property:sys.boot_completed=1
+        exec u:r:su:s0 root root -- /init.special_power.sh
+   
+        # according to Qcom this legacy value improves first launch latencies
+        # stock value is 512k
+        # from franciscofranco
+        setprop dalvik.vm.heapminfree 2m
+
+          
+	# Disable Laptop Mode
+        write /proc/sys/vm/laptop_mode 0
+
+	#Disable Backlight Dimmer
+        write /sys/module/mdss_fb/parameters/backlight_dimmer 0
+
+   
+        #deep sleep
+        setprop pm.sleep_mode 1
+
+
+        # Add kernel name
+        setprop persist.spectrum.kernel ☀️ⒶⓩⓤⓡⒺ☀️ 
+
+	#Set Sched Idle Frequeny
+        write /sys/devices/system/cpu/cpu0/sched_mostly_idle_freq 633600
+        write /sys/devices/system/cpu/cpu4/sched_mostly_idle_freq 633600
+        write /sys/devices/system/cpu/cpu0/sched_mostly_idle_load 20
+        write /sys/devices/system/cpu/cpu4/sched_mostly_idle_load 15
+
+	#Enable FSync
+        write /sys/module/sync/parameters/fsync_enabled Y
+	
+	#Double Tap to Wake
+	write /sys/kernel/touchpanel/dclicknode 1
+	
+	# update cpusets now that boot is complete and we want better load balancing
+	write /dev/cpuset/top-app/cpus 0-3,4-7
+	write /dev/cpuset/foreground/boost/cpus 4-7
+	write /dev/cpuset/foreground/cpus 0-2,4-7
+	write /dev/cpuset/background/cpus 0-1
+	write /dev/cpuset/system-background/cpus 0-2
+	write /dev/cpuset/camera-daemon/cpus 0-3
+
+	
+	#Enable LPM
+        #write /sys/module/lpm_levels/parameters/sleep_disabled 0
+        
+        #Configure LPM, setup power retention
+        write /sys/module/lpm_levels/system/pwr/cpu0/ret/idle_enabled N
+        write /sys/module/lpm_levels/system/pwr/cpu1/ret/idle_enabled N
+        write /sys/module/lpm_levels/system/pwr/cpu2/ret/idle_enabled N
+        write /sys/module/lpm_levels/system/pwr/cpu3/ret/idle_enabled N
+    	write /sys/module/lpm_levels/system/perf/cpu4/ret/idle_enabled N
+    	write /sys/module/lpm_levels/system/perf/cpu5/ret/idle_enabled N
+    	write /sys/module/lpm_levels/system/perf/cpu6/ret/idle_enabled N
+    	write /sys/module/lpm_levels/system/perf/cpu7/ret/idle_enabled N
+    	write /sys/module/lpm_levels/system/pwr/pwr-l2-dynret/idle_enabled N
+    	write /sys/module/lpm_levels/system/pwr/pwr-l2-ret/idle_enabled N
+    	write /sys/module/lpm_levels/system/perf/perf-l2-dynret/idle_enabled N
+    	write /sys/module/lpm_levels/system/perf/perf-l2-ret/idle_enabled N
+
+	
+	#HMP Task-Packing and Scheduler settings
+	write /proc/sys/kernel/sched_upmigrate 96
+	write /proc/sys/kernel/sched_upmigrate_min_nice 9
+	write /proc/sys/kernel/sched_downmigrate 90
+	write /proc/sys/kernel/sched_group_upmigrate 140
+	write /proc/sys/kernel/sched_group_downmigrate 120
+	write /proc/sys/kernel/sched_small_task 65
+	write /proc/sys/kernel/sched_mostly_idle_load 20
+	write /proc/sys/kernel/sched_select_prev_cpu_us 0
+	write /proc/sys/kernel/sched_freq_inc_notify 400000
+	write /proc/sys/kernel/sched_freq_dec_notify 400000
+	write /proc/sys/kernel/sched_spill_nr_run 5
+	write /proc/sys/kernel/sched_restrict_cluster_spill 1
+	write /proc/sys/kernel/sched_short_burst_ns 100000
+	write /proc/sys/kernel/sched_prefer_sync_wakee_to_waker 1
+	write /proc/sys/kernel/sched_small_wakee_task_load 20
