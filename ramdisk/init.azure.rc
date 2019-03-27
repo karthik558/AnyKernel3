@@ -16,15 +16,9 @@ on property:sys.boot_completed=1
         # Add kernel name
         setprop persist.spectrum.kernel ☀️ⒶⓩⓤⓡⒺ☀️ 
 
-	#Disable FSync
-        write /sys/module/sync/parameters/fsync_enabled N
+	#Enable FSync
+        write /sys/module/sync/parameters/fsync_enabled y
 	
 	#Double Tap to Wake
 	write /sys/kernel/touchpanel/dclicknode 1
 
-	#Tweaks
-	setprop pm.sleep_mode 1
-	setprop ro.ril.disable.power.collapse 1
-	setprop wifi.supplicant_scan_interval 180
-	setprop ro.config.hw_fast_dormancy 1
-	setprop ro.config.hw_power_saving true
