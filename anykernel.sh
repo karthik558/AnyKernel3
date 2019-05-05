@@ -9,10 +9,10 @@ do.devicecheck=1
 do.modules=0
 do.cleanup=1
 do.cleanuponabort=0
-device.name1=ASUS_X00TD
-device.name2=X00TD
-device.name3=X00T
-device.name4=ASUS_X00TDA
+device.name1=violet
+device.name2=
+device.name3=
+device.name4=
 device.name5=
 supported.versions=8.1.0 - 9
 '; } # end properties
@@ -40,7 +40,6 @@ dump_boot;
 
 
 # begin ramdisk changes
-insert_line init.rc "init.azure.rc" after "import /init.usb.rc" "import /init.azure.rc";
 #insert_line init.rc "init.spectrum.rc" after "import /init.azure.rc" "import /init.spectrum.rc";
 
 #insert_line /vendor/etc/init/hw/init.qcom.rc "init.azure.rc" after "import /vendor/etc/init/hw/init.qcom.usb.rc" "import /init.azure.rc";
@@ -51,9 +50,9 @@ backup_file init.rc;
 replace_string init.rc "cpuctl cpu,timer_slack" "mount cgroup none /dev/cpuctl cpu" "mount cgroup none /dev/cpuctl cpu,timer_slack";
 
 # Remove CAF Boost Framework cuz CAF is a hoe
-mount -o rw,remount -t auto /vendor >/dev/null;
-rm -rf /vendor/etc/perf;
-mount -o ro,remount -t auto /vendor >/dev/null;
+#mount -o rw,remount -t auto /vendor >/dev/null;
+#rm -rf /vendor/etc/perf;
+#mount -o ro,remount -t auto /vendor >/dev/null;
 
 # end ramdisk changes
 
