@@ -60,13 +60,6 @@ append_file fstab.tuna "usbdisk" fstab;
 if mountpoint -q /data; then
   # Optimize F2FS extension list (@arter97)
   for list_path in $(find /sys/fs/f2fs* -name extension_list); do
-    hash="$(md5sum $list_path | cut -d' ' -f1)"
-
-    # Skip update if our list is already active
-    if [[ $hash == "0e2627998f2f06aa951f90d2af30e859" ]]; then
-      echo "Extension list up-to-date: $list_path"
-      continue
-    fi
 
     ui_print "  • Optimizing F2FS extension list"
     echo "Updating extension list: $list_path"
