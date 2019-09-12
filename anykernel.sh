@@ -37,23 +37,6 @@ chown -R root:root $ramdisk/*;
 ## AnyKernel install
 dump_boot;
 
-
-
-# begin ramdisk changes
-#insert_line init.rc "init.spectrum.rc" after "import /init.azure.rc" "import /init.spectrum.rc";
-
-#insert_line /vendor/etc/init/hw/init.qcom.rc "init.azure.rc" after "import /vendor/etc/init/hw/init.qcom.usb.rc" "import /init.azure.rc";
-#insert_line /vendor/etc/init/hw/init.qcom.rc "init.spectrum.rc" after "import /init.azure.rc" "import /init.spectrum.rc";
-
-# init.rc
-backup_file init.rc;
-replace_string init.rc "cpuctl cpu,timer_slack" "mount cgroup none /dev/cpuctl cpu" "mount cgroup none /dev/cpuctl cpu,timer_slack";
-
-# Remove CAF Boost Framework cuz CAF is a hoe
-#mount -o rw,remount -t auto /vendor >/dev/null;
-#rm -rf /vendor/etc/perf;
-#mount -o ro,remount -t auto /vendor >/dev/null;
-
 # end ramdisk changes
 
 write_boot;
