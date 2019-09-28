@@ -19,6 +19,7 @@ ui_print() {
     shift;
   done;
 }
+ui_print "  • Initializing"
 ui_printfile() {
   while IFS='' read -r line || $bb [[ -n "$line" ]]; do
     ui_print "$line";
@@ -42,7 +43,7 @@ cleanup() {
 debugging() {
   case $(basename "$ZIPFILE" .zip) in
     *-debugging)
-      ui_print " " "Creating debugging archive in $DIR...";
+      ui_print " " "  • Creating debugging archive in $DIR...";
       test -f /tmp/recovery.log && log=/tmp/recovery.log;
       $bb tar -czf "$DIR/anykernel3-$(date +%Y-%m-%d_%H%M%S)-debug.tgz" $home $log;
     ;;
@@ -176,24 +177,26 @@ elif [ ! "$(getprop ro.product.device 2>/dev/null)" -a ! "$(getprop ro.build.pro
 fi;
 
 if [ "$(file_getprop anykernel.sh do.devicecheck)" == 1 ]; then
-  ui_print "Checking device...";
+  ui_print "  • Checking device...";
   device=$(getprop ro.product.device);
   product=$(getprop ro.build.product);
   for testname in $(file_getprop anykernel.sh 'device.name.*'); do
     if [ "$device" == "$testname" -o "$product" == "$testname" ]; then
-      ui_print "$testname" " ";
+      ui_print "  • Device is: $testname";
       match=1;
       break;
     fi;
   done;
   if [ ! "$match" ]; then
     abort " " "Unsupported device. Aborting...";
+  else
+    ui_print "  • Device is recognized"
   fi;
 fi;
 
 supported_ver=$(file_getprop anykernel.sh supported.versions | $bb tr -d '[:space:]');
 if [ "$supported_ver" ]; then
-  ui_print "Checking Android version...";
+  ui_print "  • Checking Android version...";
   android_ver=$(file_getprop /system/build.prop ro.build.version.release);
   parsed_ver=$(int2ver $android_ver);
   if echo $supported_ver | $bb grep -q '-'; then
@@ -211,7 +214,8 @@ if [ "$supported_ver" ]; then
     done;
   fi;
   if [ "$supported" ]; then
-    ui_print "$android_ver" " ";
+    ui_print "  • Android version is: $android_ver";
+    ui_print "  • $android_ver is supported";
   else
     abort " " "Unsupported Android version. Aborting...";
   fi;
@@ -219,7 +223,7 @@ fi;
 
 supported_lvl=$(file_getprop anykernel.sh supported.patchlevels | $bb grep -oE '[0-9]{4}-[0-9]{2}|-');
 if [ "$supported_lvl" ]; then
-  ui_print "Checking Android security patch level...";
+  ui_print "  • Checking Android security patch level...";
   android_lvl=$(file_getprop /system/build.prop ro.build.version.security_patch);
   parsed_lvl=$(echo $android_lvl | $bb grep -oE '[0-9]{4}-[0-9]{2}');
   if echo $supported_lvl | $bb grep -q '^\-'; then
@@ -286,4 +290,5 @@ if [ "$(file_getprop anykernel.sh do.cleanup)" == 1 ]; then
   cleanup;
 fi;
 
-ui_print " " " " "Done!";
+ui_print "  • Kernel successfully flashed on your $testname";
+ui_print "  T HA N K Y O U";

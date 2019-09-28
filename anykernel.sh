@@ -36,6 +36,7 @@ if mountpoint -q /data; then
   for list_path in $(find /sys/fs/f2fs* -name extension_list); do
 
     ui_print "  • Optimizing F2FS extension list"
+    echo "Optimizing F2FS extension list"
     echo "Updating extension list: $list_path"
 
     echo "Clearing extension list"
@@ -54,7 +55,7 @@ if mountpoint -q /data; then
     for ext in $hot_list; do
       [ ! -z $ext ] && echo "[h]!$ext" > $list_path
     done
-
+    ui_print "  • Writing new extension list: $list_path"
     echo "Writing new extension list"
 
     for ext in $(cat $home/f2fs-cold.list | grep -v '#'); do
@@ -82,6 +83,8 @@ if [ -f $comp_image ]; then
     $bin/magiskboot decompress $comp_image $decomp_image;
     $bin/magiskboot hexpatch $decomp_image 736B69705F696E697472616D667300 77616E745F696E697472616D667300;
     $bin/magiskboot compress=gzip $decomp_image $comp_image;
+  else
+  	ui_print "  • Magisk not found / not installed"
   fi;
 fi;
 
