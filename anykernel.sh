@@ -32,6 +32,15 @@ customdd="bs=1048576"
 ## AnyKernel install
 split_boot;
 
+# Add skip_override parameter to cmdline so user doesn't have to reflash Magisk
+if [ -d $ramdisk/.backup ]; then
+  ui_print " "; 
+  ui_print "Magisk detected! Patching cmdline so reflashing Magisk is not necessary...";
+  patch_cmdline "skip_override" "skip_override";
+else
+  patch_cmdline "skip_override" "";
+fi;
+
 if mountpoint -q /data; then
   # Optimize F2FS extension list (@arter97)
   for list_path in $(find /sys/fs/f2fs* -name extension_list); do
@@ -68,27 +77,6 @@ if mountpoint -q /data; then
     done
   done
 fi
-
-decomp_image=$home/Image
-comp_image=$decomp_image.gz-dtb
-
-# Hex-patch the kernel if Magisk is installed ('skip_initramfs' -> 'want_initramfs')
-# This negates the need to reflash Magisk afterwards
-if [ -f $comp_image ]; then
-  comp_rd=$split_img/ramdisk.cpio
-  decomp_rd=$home/_ramdisk.cpio
-  $bin/magiskboot decompress $comp_rd $decomp_rd || cp $comp_rd $decomp_rd
-
-  if $bin/magiskboot cpio $decomp_rd "exists .backup"; then
-    ui_print "  • Preserving Magisk";
-    $bin/magiskboot decompress $comp_image $decomp_image;
-    $bin/magiskboot hexpatch $decomp_image 736B69705F696E697472616D667300 77616E745F696E697472616D667300;
-    $bin/magiskboot compress=gzip $decomp_image $comp_image;
-  else
-  	ui_print "  • Magisk not found / not installed"
-  fi;
-fi;
-
 
 # end ramdisk changes
 
