@@ -158,7 +158,7 @@ unpack_ramdisk() {
   else
     # ramdisk.cpio is not present.
     magisk_present=false
-    abort "Magisk was not detected. Proceeding in OG AK mode...";
+    ui_print "Magisk was not detected. Proceeding in OG AK mode...";
   fi;
   if [ "$comp" ]; then
     mv -f ramdisk.cpio ramdisk.cpio.$comp;
