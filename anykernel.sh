@@ -21,7 +21,8 @@ supported.patchlevels=
 # shell variables
 block=/dev/block/bootdevice/by-name/boot;
 is_slot_device=0;
-ramdisk_compression=none;
+# this property will be set later, when we check for the presence of ramdisk.cpio
+# ramdisk_compression=none;
 customdd="bs=1048576"
 
 
@@ -30,16 +31,25 @@ customdd="bs=1048576"
 . tools/ak3-core.sh;
 
 ## AnyKernel install
-split_boot;
+if [ "$magisk_present" = true ]; then
+  # AnyKernel file attributes
+  # set permissions/ownership for included ramdisk files
+  set_perm_recursive 0 0 755 644 $ramdisk/*;
+  set_perm_recursive 0 0 750 750 $ramdisk/init* $ramdisk/sbin;
 
-# Add skip_override parameter to cmdline so user doesn't have to reflash Magisk
-if [ -d $ramdisk/.backup ]; then
-  ui_print " "; 
-  ui_print "Magisk detected! Patching cmdline so reflashing Magisk is not necessary...";
-  patch_cmdline "skip_override" "skip_override";
+  dump_boot;
+
+  # Add skip_override parameter to cmdline so user doesn't have to reflash Magisk
+  if [ -d $ramdisk/.backup ]; then
+    ui_print " ";
+    ui_print "Magisk detected! Patching cmdline so reflashing Magisk is not necessary...";
+    patch_cmdline "skip_override" "skip_override";
+  else
+    patch_cmdline "skip_override" "";
+  fi;
 else
-  patch_cmdline "skip_override" "";
-fi;
+  split_boot;
+fi
 
 if mountpoint -q /data; then
   # Optimize F2FS extension list (@arter97)
@@ -80,6 +90,10 @@ fi
 
 # end ramdisk changes
 
-flash_boot;
-flash_dtbo;
+if [ "$magisk_present" = true ]; then
+  write_boot;
+else
+  flash_boot;
+  flash_dtbo;
+fi
 ## end install
