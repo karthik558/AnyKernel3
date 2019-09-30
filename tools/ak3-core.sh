@@ -152,9 +152,13 @@ unpack_ramdisk() {
   fi;
 
   if [ -f ramdisk.cpio ]; then
+    # ramdisk.cpio is present. OG AK mode is not required.
+    magisk_present=true
     comp=$($bin/magiskboot decompress ramdisk.cpio 2>&1 | grep -v 'raw' | sed -n 's;.*\[\(.*\)\];\1;p');
   else
-    abort "No ramdisk found to unpack. Aborting...";
+    # ramdisk.cpio is not present.
+    magisk_present=false
+    ui_print "Magisk was not detected. Proceeding in OG AK mode...";
   fi;
   if [ "$comp" ]; then
     mv -f ramdisk.cpio ramdisk.cpio.$comp;

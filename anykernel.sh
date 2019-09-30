@@ -21,7 +21,8 @@ supported.patchlevels=
 # shell variables
 block=/dev/block/bootdevice/by-name/boot;
 is_slot_device=0;
-ramdisk_compression=none;
+# this property will be set later, when we check for the presence of ramdisk.cpio
+# ramdisk_compression=none;
 customdd="bs=1048576"
 
 
@@ -30,7 +31,25 @@ customdd="bs=1048576"
 . tools/ak3-core.sh;
 
 ## AnyKernel install
-split_boot;
+if [ "$magisk_present" = true ]; then
+  # AnyKernel file attributes
+  # set permissions/ownership for included ramdisk files
+  set_perm_recursive 0 0 755 644 $ramdisk/*;
+  set_perm_recursive 0 0 750 750 $ramdisk/init* $ramdisk/sbin;
+
+  dump_boot;
+
+  # Add skip_override parameter to cmdline so user doesn't have to reflash Magisk
+  if [ -d $ramdisk/.backup ]; then
+    ui_print " ";
+    ui_print "Magisk detected! Patching cmdline so reflashing Magisk is not necessary...";
+    patch_cmdline "skip_override" "skip_override";
+  else
+    patch_cmdline "skip_override" "";
+  fi;
+else
+  split_boot;
+fi
 
 if mountpoint -q /data; then
   # Optimize F2FS extension list (@arter97)
@@ -69,29 +88,12 @@ if mountpoint -q /data; then
   done
 fi
 
-decomp_image=$home/Image
-comp_image=$decomp_image.gz-dtb
-
-# Hex-patch the kernel if Magisk is installed ('skip_initramfs' -> 'want_initramfs')
-# This negates the need to reflash Magisk afterwards
-if [ -f $comp_image ]; then
-  comp_rd=$split_img/ramdisk.cpio
-  decomp_rd=$home/_ramdisk.cpio
-  $bin/magiskboot decompress $comp_rd $decomp_rd || cp $comp_rd $decomp_rd
-
-  if $bin/magiskboot cpio $decomp_rd "exists .backup"; then
-    ui_print "  • Preserving Magisk";
-    $bin/magiskboot decompress $comp_image $decomp_image;
-    $bin/magiskboot hexpatch $decomp_image 736B69705F696E697472616D667300 77616E745F696E697472616D667300;
-    $bin/magiskboot compress=gzip $decomp_image $comp_image;
-  else
-  	ui_print "  • Magisk not found / not installed"
-  fi;
-fi;
-
-
 # end ramdisk changes
 
-flash_boot;
-flash_dtbo;
+if [ "$magisk_present" = true ]; then
+  write_boot;
+else
+  flash_boot;
+  flash_dtbo;
+fi
 ## end install
