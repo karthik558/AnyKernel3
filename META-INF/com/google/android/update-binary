@@ -128,7 +128,6 @@ if [ -f version ]; then
   ui_printfile version;
   ui_print " ";
 fi;
-ui_print " " "AnyKernel3 by osm0sis @ xda-developers" " " " ";
 
 $BOOTMODE || $bb mount -o bind /dev/urandom /dev/random;
 umount_all;
@@ -243,7 +242,7 @@ if [ "$supported_lvl" ]; then
   fi;
 fi;
 
-ui_print "Installing...";
+ui_print "  •  Installing...";
 core=$($bb grep -oE 'ak.*core.sh' anykernel.sh);
 test -f tools/$core || $bb ln -s $home/tools/ak*-core.sh $home/tools/$core;
 PATH="$home/bin:$PATH" home=$home $bb ash anykernel.sh $2;
@@ -291,4 +290,3 @@ if [ "$(file_getprop anykernel.sh do.cleanup)" == 1 ]; then
 fi;
 
 ui_print "  • Kernel successfully flashed on your $testname";
-ui_print "  T HA N K Y O U";

@@ -4,7 +4,7 @@
 ## AnyKernel setup
 # begin properties
 properties() { '
-kernel.string=AzurE Kernel by Panchajanya1999 @ xda-developers
+kernel.string=
 do.devicecheck=1
 do.modules=0
 do.cleanup=1
@@ -44,10 +44,11 @@ if [ "$magisk_present" = true ]; then
   # Add skip_override parameter to cmdline so user doesn't have to reflash Magisk
   if [ -d $ramdisk/.backup ]; then
     ui_print " ";
-    ui_print "Magisk detected! Patching cmdline so reflashing Magisk is not necessary...";
+    ui_print "  • Rooted Mode [Magisk] detected";
     patch_cmdline "skip_override" "skip_override";
   else
     patch_cmdline "skip_override" "";
+    ui_print "  • Rootless Mode detected"
   fi;
 else
   split_boot;
@@ -77,7 +78,7 @@ if mountpoint -q /data; then
     for ext in $hot_list; do
       [ ! -z $ext ] && echo "[h]!$ext" > $list_path
     done
-    ui_print "  • Writing new extension list: $list_path"
+    ui_print "  • Writing new extension list"
     echo "Writing new extension list"
 
     for ext in $(cat $home/f2fs-cold.list | grep -v '#'); do
