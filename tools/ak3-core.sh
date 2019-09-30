@@ -152,9 +152,11 @@ magisk_check() {
   if [ -f ramdisk.cpio ]; then
     # ramdisk.cpio is present. OG AK mode is not required.
     magisk_present=true
+    ramdisk_compression=auto
   else
     # ramdisk.cpio is not present. Set flag to false.
     magisk_present=false
+    ramdisk_compression=none
   fi;
 }
 
