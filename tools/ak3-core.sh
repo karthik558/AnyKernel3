@@ -138,6 +138,28 @@ split_boot() {
   cd $home;
 }
 
+# magisk_check (check for magisk)
+magisk_check() {
+  cd $split_img;
+  if [ -f ramdisk.cpio.gz ]; then
+    if [ -f "$bin/mkmtkhdr" ]; then
+      mv -f ramdisk.cpio.gz ramdisk.cpio.gz-mtk;
+      dd bs=512 skip=1 conv=notrunc if=ramdisk.cpio.gz-mtk of=ramdisk.cpio.gz;
+    fi;
+    mv -f ramdisk.cpio.gz ramdisk.cpio;
+  fi;
+
+  if [ -f ramdisk.cpio ]; then
+    # ramdisk.cpio is present. OG AK mode is not required.
+    magisk_present=true
+    ramdisk_compression=auto
+  else
+    # ramdisk.cpio is not present. Set flag to false.
+    magisk_present=false
+    ramdisk_compression=none
+  fi;
+}
+
 # unpack_ramdisk (extract ramdisk only)
 unpack_ramdisk() {
   local comp;
@@ -152,12 +174,8 @@ unpack_ramdisk() {
   fi;
 
   if [ -f ramdisk.cpio ]; then
-    # ramdisk.cpio is present. OG AK mode is not required.
-    magisk_present=true
     comp=$($bin/magiskboot decompress ramdisk.cpio 2>&1 | grep -v 'raw' | sed -n 's;.*\[\(.*\)\];\1;p');
   else
-    # ramdisk.cpio is not present.
-    magisk_present=false
     ui_print "Magisk was not detected. Proceeding in OG AK mode...";
   fi;
   if [ "$comp" ]; then
