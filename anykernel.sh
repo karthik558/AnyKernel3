@@ -30,7 +30,7 @@ customdd="bs=1048576"
 # import patching functions/variables - see for reference
 . tools/ak3-core.sh;
 
-magisk_check()
+magisk_check;
 
 ## AnyKernel install
 if [ "$magisk_present" = true ]; then
