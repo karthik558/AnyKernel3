@@ -392,7 +392,10 @@ flash_dtbo() {
   cd $home;
   for i in dtbo dtbo.img; do
     if [ -f $i ]; then
-      dtbo=$i;
+      if [ "$flashdtbo" == true ]; then
+      	dtbo=$i; 
+      	echo "DTBO selected"
+      fi;
       break;
     fi;
   done;

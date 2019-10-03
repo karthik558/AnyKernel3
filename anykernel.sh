@@ -25,6 +25,18 @@ is_slot_device=0;
 # ramdisk_compression=none;
 customdd="bs=1048576"
 
+# Check if we have appended FPS in kernel zip name, set accordingly
+case "$ZIPFILE" in
+  *"dtbo"*|*dtbo*)
+    export flashdtbo=true;
+    echo "DTBO build detected"
+    ui_print "  • DTBO inclusion detected in Zip File"
+    ;;
+  *)
+    echo " DTBO-less Normal build"
+    ui_print "  • DTBO-less Normal build"
+    ;;
+esac
 
 ## AnyKernel methods (DO NOT CHANGE)
 # import patching functions/variables - see for reference
@@ -43,7 +55,6 @@ if [ "$magisk_present" = true ]; then
 
   # Add skip_override parameter to cmdline so user doesn't have to reflash Magisk
   if [ -d $ramdisk/.backup ]; then
-    ui_print " ";
     ui_print "  • Rooted Mode [Magisk] detected";
     patch_cmdline "skip_override" "skip_override";
   else
