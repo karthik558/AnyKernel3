@@ -177,7 +177,7 @@ unpack_ramdisk() {
   if [ -f ramdisk.cpio ]; then
     comp=$($bin/magiskboot decompress ramdisk.cpio 2>&1 | grep -v 'raw' | sed -n 's;.*\[\(.*\)\];\1;p');
   else
-    ui_print "Magisk was not detected. Proceeding in OG AK mode...";
+    ui_print "  • Magisk was not detected. Proceeding in OG AK mode...";
   fi;
   if [ "$comp" ]; then
     mv -f ramdisk.cpio ramdisk.cpio.$comp;
@@ -398,6 +398,7 @@ flash_dtbo() {
   done;
 
   if [ "$dtbo" ]; then
+  	ui_print "  • dtbo.img found in zip"
     dtboblock=/dev/block/bootdevice/by-name/dtbo$slot;
     if [ ! -e "$dtboblock" ]; then
       abort "dtbo partition could not be found. Aborting...";
@@ -413,6 +414,8 @@ flash_dtbo() {
     fi;
     if [ $? != 0 ]; then
       abort "Flashing dtbo failed. Aborting...";
+    else
+      ui_print "  • dtbo.img flashed successfully"
     fi;
   fi;
 }
