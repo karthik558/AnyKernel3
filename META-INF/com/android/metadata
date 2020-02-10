@@ -1,0 +1,4 @@
+post-build=Xiaomi/aosp_violet/violet:10/QQ1B.200105.004/e096ccb016:userdebug/release-keys
+post-sdk-level=29
+post-security-patch-level=2020-01-01
+pre-device=violet
