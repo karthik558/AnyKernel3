@@ -390,15 +390,22 @@ flash_dtbo() {
   local i dtbo dtboblock;
 
   cd $home;
-  for i in dtbo dtbo.img; do
-    if [ -f $i ]; then
-      if [ "$flashdtbo" == true ]; then
-      	dtbo=$i; 
-      	echo "DTBO selected"
+  case "$ZIPFILE" in
+  *"dtbo"*|*dtbo*)
+    for i in dtbo dtbo.img; do
+      if [ -f $i ]; then
+        echo "DTBO selected"
+        ui_print "  • DTBO inclusion detected in Zip File"
+        dtbo=$i; 
+        break;
       fi;
-      break;
-    fi;
-  done;
+    done;
+    ;;
+  *)
+    echo " DTBO-less Normal build"
+    ui_print "  • DTBO-less Normal build"
+    ;;
+  esac
 
   if [ "$dtbo" ]; then
   	ui_print "  • dtbo.img found in zip"
