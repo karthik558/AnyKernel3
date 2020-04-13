@@ -139,7 +139,7 @@ split_boot() {
 }
 
 # magisk_check (check for magisk)
-magisk_check() {
+function magisk_check() {
   split_boot;
   cd $split_img;
   if [ -f ramdisk.cpio.gz ]; then
