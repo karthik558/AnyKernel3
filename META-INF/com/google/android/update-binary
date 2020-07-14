@@ -19,8 +19,9 @@ ui_print() {
     shift;
   done;
 }
-ui_print " "
-ui_print "  • Initializing"
+
+ui_print "----- R Y Z E N  K E R N E L by @Karthik_SP -----" " "
+
 ui_printfile() {
   while IFS='' read -r line || $bb [[ -n "$line" ]]; do
     ui_print "$line";
@@ -289,4 +290,4 @@ if [ "$(file_getprop anykernel.sh do.cleanup)" == 1 ]; then
   cleanup;
 fi;
 
-ui_print "  • Kernel successfully flashed on your $testname";
+ui_print " " "R Y Z E N  K E R N E L flash successful!"
