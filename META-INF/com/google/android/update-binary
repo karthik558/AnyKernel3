@@ -20,8 +20,8 @@ ui_print() {
   done;
 }
 
-ui_print "----R Y Z E N  K E R N E L----"
-ui_print "---A Kernel for violet by @Karthik_SP---"
+ui_print "------R Y Z E N  K E R N E L------"
+ui_print "-----KERNEL BY  K A R T H I K-----"
 
 ui_printfile() {
   while IFS='' read -r line || $bb [[ -n "$line" ]]; do
@@ -341,5 +341,5 @@ if [ "$(file_getprop anykernel.sh do.cleanup)" == 1 ]; then
   cleanup;
 fi;
 
-ui_print " " "R Y Z E N  K E R N E L is now on your VIOLET, ENJOY "
+ui_print " " "THANK YOU FOR USING R Y Z E N-K E R N E L"
 
