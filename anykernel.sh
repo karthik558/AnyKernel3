@@ -21,7 +21,7 @@ supported.versions=11
 # shell variables
 block=/dev/block/bootdevice/by-name/boot;
 is_slot_device=auto;
-ramdisk_compression=auto;
+ramdisk_compression=none;
 
 
 ## AnyKernel methods (DO NOT CHANGE)
