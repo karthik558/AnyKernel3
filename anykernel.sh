@@ -22,7 +22,7 @@ supported.patchlevels=
 # shell variables
 block=/dev/block/bootdevice/by-name/boot;
 is_slot_device=0;
-ramdisk_compression=auto;
+ramdisk_compression=none;
 
 
 ## AnyKernel methods (DO NOT CHANGE)
