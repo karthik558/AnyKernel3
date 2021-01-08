@@ -4,9 +4,10 @@
 ## AnyKernel setup
 # begin properties
 properties() { '
-kernel.string=TeamWarp kernel By Chiranth
+kernel.string=RyZeN by K A R T H I K @ xda-developers
 do.devicecheck=1
 do.modules=0
+do.systemless=0
 do.cleanup=1
 do.cleanuponabort=0
 device.name1=phoenix
@@ -14,7 +15,7 @@ device.name2=phoenixin
 device.name3=
 device.name4=
 device.name5=
-supported.versions=
+supported.versions=11
 '; } # end properties
 
 # shell variables
