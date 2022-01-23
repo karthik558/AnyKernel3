@@ -103,3 +103,8 @@ fi
 write_boot;
 ## end install
 
+# shell variables
+#block=vendor_boot;
+#is_slot_device=1;
+#ramdisk_compression=auto;
+#keep_vbmeta_flag=auto;
